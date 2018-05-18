@@ -266,6 +266,17 @@ void clsMain::AppMain()
 	{
 		m_smpSeClick->SeekToStart();
 	}
+
+	if (GetAsyncKeyState('C') & 0x8000) {
+		if (CameaVp >= 2 )
+		{
+			CameaVp = 0;
+		}
+		CameaVp++;
+		m_pDeviceContext->RSSetViewports(1, &m_vp[CameaVp]);
+		Resource->SetSpriteRender(m_hWnd,m_pDevice,m_pDeviceContext);
+	}
+
 	switch (m_enScene)
 	{
 	case Title:
@@ -598,14 +609,40 @@ HRESULT clsMain::InitD3D()
 	Resource->SetDepth(false);
 
 	//ビューポートの設定.
-	D3D11_VIEWPORT vp;
-	vp.Width = WND_W;	//幅.
-	vp.Height = WND_H;	//高さ.
-	vp.MinDepth = 0.0f;		//最小深度(手前)
-	vp.MaxDepth = 1.0f;		//最大深度(奥)
-	vp.TopLeftX = 0.0f;		//左上位置x.
-	vp.TopLeftY = 0.0f;		//左上位置y.
-	m_pDeviceContext->RSSetViewports(1, &vp);
+	m_vp.resize(static_cast<int>(ViewPort::Max));
+	switch (m_enVpMode)
+	{
+	case ViewPort::All:
+		//全画面用.
+		m_vp[0].Width		= WND_W;		//幅.
+		m_vp[0].Height		= WND_H;		//高さ.
+		m_vp[0].MinDepth	= 0.0f;		//最小深度(手前)
+		m_vp[0].MaxDepth	= 1.0f;		//最大深度(奥)
+		m_vp[0].TopLeftX	= 0.0f;		//左上位置x.
+		m_vp[0].TopLeftY	= 0.0f;		//左上位置y.
+		break;
+	case ViewPort::RightHalf:
+		//右画面用
+		m_vp[1].Width		= WND_W/2;	//幅.
+		m_vp[1].Height		= WND_H;	//高さ.
+		m_vp[1].MinDepth	= 0.0f;		//最小深度(手前)
+		m_vp[1].MaxDepth	= 1.0f;		//最大深度(奥)
+		m_vp[1].TopLeftX	= WND_W/2;	//左上位置x.
+		m_vp[1].TopLeftY	= 0.0f;		//左上位置y.
+		break;
+	case ViewPort::LeftHalf:
+		//左画面用.
+		m_vp[2].Width		= WND_W/2;		//幅.
+		m_vp[2].Height		= WND_H;		//高さ.
+		m_vp[2].MinDepth	= 0.0f;		//最小深度(手前)
+		m_vp[2].MaxDepth	= 1.0f;		//最大深度(奥)
+		m_vp[2].TopLeftX	= 0.0f;		//左上位置x.
+		m_vp[2].TopLeftY	= 0.0f;		//左上位置y.
+		break;
+	default:
+		break;
+	}
+	m_pDeviceContext->RSSetViewports(1, &m_vp[0]);
 
 	//ラスタライズ(面の塗りつぶし方)設定.
 	D3D11_RASTERIZER_DESC rdc;

@@ -51,7 +51,13 @@ struct CAMERA
 	float		fYaw;	//回転値.
 	D3DXMATRIX	mRot;	//回転行列.
 };
-
+enum class ViewPort
+{
+	All = 0,
+	RightHalf,
+	LeftHalf,
+	Max,
+};
 /*************************************************
 *	メインクラス.
 **/
@@ -90,6 +96,11 @@ private:
 	ID3D11RenderTargetView*	m_pBackBuffer_TexRTV;//レンダーターゲットビュー.
 	ID3D11Texture2D*		m_pBackBuffer_DSTex;//バックバッファ.
 	ID3D11DepthStencilView*	m_pBackBuffer_DSTexDSV;//デプスステンシルビュー.
+
+	ViewPort m_enVpMode;	//作ったビューポートのモードたち
+	vector<D3D11_VIEWPORT> m_vp;//実際のビューポートデータ.
+
+	short CameaVp;
 
 	D3DXVECTOR3		m_vLight;		//ライトの方向.
 

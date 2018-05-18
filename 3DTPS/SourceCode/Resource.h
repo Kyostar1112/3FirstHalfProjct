@@ -99,6 +99,11 @@ public:
 		m_stSpriteRenderSet.hWnd = hWnd;
 		m_stSpriteRenderSet.pDevice11 = pDevice11;
 		m_stSpriteRenderSet.pContext11 = pContext11;
+
+		m_si.hWnd = m_stSpriteRenderSet.hWnd;
+		m_si.pDevice = m_stSpriteRenderSet.pDevice11;
+		m_si.pDeviceContext = m_stSpriteRenderSet.pContext11;
+
 	}
 	unique_ptr<clsFile> m_smpFile;
 	vector<int> m_viScore;
